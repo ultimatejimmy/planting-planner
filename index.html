@@ -4,7 +4,7 @@
 	</head>
 	<body>
 		<input id="frostDate" type="date" />
-		<button onclick="generateTable(plants);" type="submit">
+		<button onclick="generateTable();" type="submit">
 			Get Schedule!
 		</button>
 		<div id="plants" class="hidden">
@@ -15,8 +15,10 @@
 			/>
 			<table class="pure-table pure-table-striped pure-table-horizontal">
 				<thead>
-					<th>Plant</th>
-					<th>Schedule</th>
+					<tr>
+						<td>Plant</td>
+						<td>Schedule</td>
+					</tr>
 				</thead>
 				<tbody class="list"></tbody>
 			</table>

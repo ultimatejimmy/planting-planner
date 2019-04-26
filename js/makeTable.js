@@ -1,3 +1,5 @@
+const lastFrostDate = new Date(document.querySelector("input#frostDate").value);
+
 showTable = () => document.querySelector("#plants").classList.remove("hidden");
 
 document.addEventListener("keyup", function(event) {
@@ -7,7 +9,22 @@ document.addEventListener("keyup", function(event) {
 	}
 });
 
-generateTable = () => {
+generateHeader = () => {
+	for (var i = -1; i >= -10; i--) {
+		let cell = document.querySelector("thead tr").insertCell();
+		let date = calculatePlantingDate(i);
+		let month = date.getMonth();
+		let day = date.getDate();
+		console.log(date);
+		// cell.appendChild(
+		// 	document.createTextNode(
+		// 		month.toLocaleDateString() + "/" + day.toLocaleDateString()
+		// 	)
+		// );
+	}
+};
+
+generateBody = () => {
 	let tbody = document.createElement("tbody");
 	tbody.classList.add("list");
 	let old_tbody = document.querySelector("tbody");
@@ -37,24 +54,28 @@ generateTable = () => {
 	}
 	showTable();
 };
+
+generateTable = () => {
+	generateHeader();
+	generateBody();
+};
+
 getPlantingDates = (earliest, latest, theLabel) => {
 	let span = document.createElement("span");
 	let label = document.createElement("label");
 	label.appendChild(document.createTextNode(theLabel));
 	let dates =
-		calculatePlantingDate(earliest) + "-" + calculatePlantingDate(latest);
+		calculatePlantingDate(earliest).toLocaleDateString() +
+		"-" +
+		calculatePlantingDate(latest).toLocaleDateString();
 	span.appendChild(label).appendChild(document.createTextNode(dates));
 	return span;
 };
 
 calculatePlantingDate = weeks => {
-	const lastFrostDate = new Date(
-		document.querySelector("input#frostDate").value
-	);
 	let days = weeks * 7;
 	let date = lastFrostDate;
 	date.setDate(date.getDate() + days);
-	date = date.toLocaleDateString();
 
 	return date;
 };
