@@ -1,0 +1,28 @@
+<html>
+	<head>
+		<link rel="stylesheet" type="text/css" href="style.css" />
+	</head>
+	<body>
+		<input id="frostDate" type="date" />
+		<button onclick="generateTable(plants);" type="submit">
+			Get Schedule!
+		</button>
+		<div id="plants" class="hidden">
+			<input
+				id="search"
+				placeholder="Search for a plant"
+				onkeyup="searchTable()"
+			/>
+			<table class="pure-table pure-table-striped pure-table-horizontal">
+				<thead>
+					<th>Plant</th>
+					<th>Schedule</th>
+				</thead>
+				<tbody class="list"></tbody>
+			</table>
+		</div>
+	</body>
+	<script src="js/data.js"></script>
+	<script src="js/list.min.js"></script>
+	<script src="js/makeTable.js"></script>
+</html>
