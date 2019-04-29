@@ -1,9 +1,12 @@
+<!DOCTYPE html>
 <html>
 	<head>
+		<meta charset="utf-8" />
 		<link rel="stylesheet" type="text/css" href="style.css" />
 	</head>
 	<body>
-		<input id="frostDate" type="date" />
+		<h1>Spring Planting Guide</h1>
+		<input id="frostDate" type="date" placeholder="Enter as MM/DD/YYYY" />
 		<button onclick="generateTable();" type="submit">
 			Get Schedule!
 		</button>
@@ -13,18 +16,20 @@
 				placeholder="Search for a plant"
 				onkeyup="searchTable()"
 			/>
-			<table class="pure-table pure-table-striped pure-table-horizontal">
+			<table
+				id="thePlants"
+				class="pure-table pure-table-striped pure-table-horizontal"
+			>
 				<thead>
 					<tr>
 						<td>Plant</td>
 						<td>Schedule</td>
 					</tr>
 				</thead>
-				<tbody class="list"></tbody>
+				<tbody></tbody>
 			</table>
 		</div>
 	</body>
 	<script src="js/data.js"></script>
-	<script src="js/list.min.js"></script>
 	<script src="js/makeTable.js"></script>
 </html>

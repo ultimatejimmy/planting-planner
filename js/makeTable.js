@@ -1,5 +1,4 @@
 const lastFrostDate = new Date(document.querySelector("input#frostDate").value);
-
 showTable = () => document.querySelector("#plants").classList.remove("hidden");
 
 document.addEventListener("keyup", function(event) {
@@ -10,23 +9,23 @@ document.addEventListener("keyup", function(event) {
 });
 
 generateHeader = () => {
-	for (var i = -1; i >= -10; i--) {
+	var headerDates = document.getElementsByClassName("date");
+	while (headerDates[0])
+		headerDates[0].parentNode.removeChild(headerDates[0]);
+
+	for (var i = -10; i <= 3; i++) {
 		let cell = document.querySelector("thead tr").insertCell();
+		cell.classList.add("date");
 		let date = calculatePlantingDate(i);
-		let month = date.getMonth();
-		let day = date.getDate();
-		console.log(date);
-		// cell.appendChild(
-		// 	document.createTextNode(
-		// 		month.toLocaleDateString() + "/" + day.toLocaleDateString()
-		// 	)
-		// );
+		const options = { month: "numeric", day: "numeric" };
+		cell.appendChild(
+			document.createTextNode(date.toLocaleDateString(undefined, options))
+		);
 	}
 };
 
 generateBody = () => {
 	let tbody = document.createElement("tbody");
-	tbody.classList.add("list");
 	let old_tbody = document.querySelector("tbody");
 	document.querySelector("table").replaceChild(tbody, old_tbody);
 	for (let plant of plants) {
@@ -51,6 +50,30 @@ generateBody = () => {
 		);
 		schedule.appendChild(outdoor);
 		row.appendChild(schedule);
+		for (var i = -10; i <= 3; i++) {
+			let cell = row.insertCell();
+			cell.classList.add("date");
+			let date = calculatePlantingDate(i);
+			if (
+				datesOverlap(
+					calculatePlantingDate(plant.startIndoorsMax),
+					calculatePlantingDate(plant.startIndoorsMin),
+					date,
+					date
+				)
+			)
+				cell.classList.add("startIndoors");
+
+			if (
+				datesOverlap(
+					calculatePlantingDate(plant.startOutdoorsMin),
+					calculatePlantingDate(plant.startOutdoorsMax),
+					date,
+					date
+				)
+			)
+				cell.classList.add("startOutdoors");
+		}
 	}
 	showTable();
 };
@@ -73,6 +96,9 @@ getPlantingDates = (earliest, latest, theLabel) => {
 };
 
 calculatePlantingDate = weeks => {
+	const lastFrostDate = new Date(
+		document.querySelector("input#frostDate").value
+	);
 	let days = weeks * 7;
 	let date = lastFrostDate;
 	date.setDate(date.getDate() + days);
@@ -80,17 +106,21 @@ calculatePlantingDate = weeks => {
 	return date;
 };
 
+datesOverlap = (start1, end1, start2, end2) => {
+	return start1 <= end2 && start2 <= end1;
+};
+
 function searchTable() {
-	// Declare variables
-	var input, filter, table, tr, td, i, txtValue;
+	var input, filter, table, tbody, tr, td, i, txtValue;
 	input = document.getElementById("search");
 	filter = input.value.toUpperCase();
-	table = document.querySelector("table");
-	tr = table.getElementsByTagName("tr");
+	table = document.getElementById("thePlants");
+	tbody = table.querySelector("tbody");
+	tr = tbody.getElementsByTagName("tr");
 
 	// Loop through all table rows, and hide those who don't match the search query
 	for (i = 0; i < tr.length; i++) {
-		td = tr[i].getElementsByTagName("td");
+		td = tr[i].getElementsByTagName("td")[0];
 		if (td) {
 			txtValue = td.textContent || td.innerText;
 			if (txtValue.toUpperCase().indexOf(filter) > -1) {
@@ -104,4 +134,4 @@ function searchTable() {
 
 const input = document.querySelector("#frostdate");
 
-input.addEventListener("input", generateTable);
+if (input != null) input.addEventListener("input", generateTable);
