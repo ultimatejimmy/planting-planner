@@ -1,7 +1,8 @@
-const lastFrostDate = new Date(document.querySelector("input#frostDate").value);
+const dateField = document.getElementById("frostDate");
+const lastFrostDate = new Date(dateField);
 showTable = () => document.querySelector("#plants").classList.remove("hidden");
 
-document.addEventListener("keyup", function(event) {
+document.addEventListener("keyup", function (event) {
 	if (event.keyCode === 13) {
 		event.preventDefault();
 		document.querySelector("button").click();
@@ -13,11 +14,14 @@ generateHeader = () => {
 	while (headerDates[0])
 		headerDates[0].parentNode.removeChild(headerDates[0]);
 
-	for (var i = -10; i <= 3; i++) {
+	for (var i = -10; i <= 4; i++) {
 		let cell = document.querySelector("thead tr").insertCell();
 		cell.classList.add("date");
 		let date = calculatePlantingDate(i);
-		const options = { month: "numeric", day: "numeric" };
+		const options = {
+			month: "numeric",
+			day: "numeric"
+		};
 		cell.appendChild(
 			document.createTextNode(date.toLocaleDateString(undefined, options))
 		);
@@ -34,11 +38,12 @@ generateBody = () => {
 		plantName.classList.add("plant");
 		plantName.appendChild(document.createTextNode(plant.name));
 		let schedule = row.insertCell();
+		schedule.classList.add("schedule");
 		if (plant.startIndoors) {
 			let indoor = getPlantingDates(
 				plant.startIndoorsMax,
 				plant.startIndoorsMin,
-				"Start Indoors: "
+				"🏡 "
 			);
 			schedule.appendChild(indoor);
 			schedule.appendChild(document.createElement("br"));
@@ -46,11 +51,11 @@ generateBody = () => {
 		let outdoor = getPlantingDates(
 			plant.startOutdoorsMin,
 			plant.startOutdoorsMax,
-			"Start Outdoors/Plant Out: "
+			"🌤️ "
 		);
 		schedule.appendChild(outdoor);
 		row.appendChild(schedule);
-		for (var i = -10; i <= 3; i++) {
+		for (var i = -10; i <= 4; i++) {
 			let cell = row.insertCell();
 			cell.classList.add("date");
 			let date = calculatePlantingDate(i);
@@ -81,17 +86,26 @@ generateBody = () => {
 generateTable = () => {
 	generateHeader();
 	generateBody();
+	const input = document.querySelector("#frostDate");
+	input.addEventListener("change", generateTable);
+	updateURL();
 };
 
 getPlantingDates = (earliest, latest, theLabel) => {
 	let span = document.createElement("span");
-	let label = document.createElement("label");
-	label.appendChild(document.createTextNode(theLabel));
+	const options = {
+		month: "short",
+		day: "numeric"
+	};
+	span.appendChild(document.createTextNode(theLabel));
 	let dates =
-		calculatePlantingDate(earliest).toLocaleDateString() +
+		calculatePlantingDate(earliest).toLocaleDateString(undefined, options) +
 		"-" +
-		calculatePlantingDate(latest).toLocaleDateString();
-	span.appendChild(label).appendChild(document.createTextNode(dates));
+		calculatePlantingDate(latest + 6 / 7).toLocaleDateString(
+			undefined,
+			options
+		);
+	span.appendChild(document.createTextNode(dates));
 	return span;
 };
 
@@ -100,6 +114,7 @@ calculatePlantingDate = weeks => {
 		document.querySelector("input#frostDate").value
 	);
 	let days = weeks * 7;
+	days++;
 	let date = lastFrostDate;
 	date.setDate(date.getDate() + days);
 
@@ -110,7 +125,7 @@ datesOverlap = (start1, end1, start2, end2) => {
 	return start1 <= end2 && start2 <= end1;
 };
 
-function searchTable() {
+searchTable = () => {
 	var input, filter, table, tbody, tr, td, i, txtValue;
 	input = document.getElementById("search");
 	filter = input.value.toUpperCase();
@@ -132,6 +147,26 @@ function searchTable() {
 	}
 }
 
-const input = document.querySelector("#frostdate");
+const url = new URL(document.location);
+const params = new URLSearchParams(url.search);
+const date = document.getElementById('frostDate').value;
+updateURL = () => {
+	params.set("date", date);
 
-if (input != null) input.addEventListener("input", generateTable);
+	let new_url = url.toString() + "?" + params.toString();
+	history.pushState({
+		path: new_url
+	}, '', new_url);
+
+	console.log(params.toString());
+}
+
+updateDateViaURL = () => {
+	let dateValue = dateField.value;
+	if (params.has("date"))
+		dateValue = params.get(date);
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+	updateDateViaURL();
+});
