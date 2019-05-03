@@ -149,9 +149,8 @@ searchTable = () => {
 
 const url = new URL(document.location);
 const params = new URLSearchParams(url.search);
-const date = document.getElementById('frostDate').value;
 updateURL = () => {
-	params.set("date", date);
+	params.set("date", dateField.value);
 
 	let new_url = url.toString() + "?" + params.toString();
 	history.pushState({
@@ -162,11 +161,11 @@ updateURL = () => {
 }
 
 updateDateViaURL = () => {
-	let dateValue = dateField.value;
 	if (params.has("date"))
-		dateValue = params.get(date);
+		dateField.value = params.get("date");
 }
 
 document.addEventListener("DOMContentLoaded", function () {
 	updateDateViaURL();
+	generateTable();
 });

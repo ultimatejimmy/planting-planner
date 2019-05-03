@@ -61,6 +61,6 @@ getFrostDate = (stationId) => {
 setFrostDate = (date) => {
 	const currentDate = new Date();
 	let formattedDate = currentDate.getFullYear() + "-" + date.substring(0, 2) + "-" + date.substring(2);
-	dateField = formattedDate;
+	dateField.value = formattedDate;
 	generateTable();
 }
