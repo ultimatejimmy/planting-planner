@@ -1,5 +1,4 @@
-const plants = [
-	{
+const plants = [{
 		name: "Artichoke",
 		startIndoors: true,
 		startIndoorsMax: -8,
@@ -216,6 +215,14 @@ const plants = [
 		startIndoorsMin: -6,
 		startOutdoorsMin: -4,
 		startOutdoorsMax: -3
+	},
+	{
+		name: "Okra",
+		startIndoors: true,
+		startIndoorsMax: -4,
+		startIndoorsMin: -3,
+		startOutdoorsMin: 2,
+		startOutdoorsMax: 4
 	},
 	{
 		name: "Onions",

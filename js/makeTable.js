@@ -1,6 +1,7 @@
 const dateField = document.getElementById("frostDate");
 const lastFrostDate = new Date(dateField);
 showTable = () => document.querySelector("#plants").classList.remove("hidden");
+hideTable = () => document.querySelector("#plants").classList.add("hidden");
 
 document.addEventListener("keyup", function (event) {
 	if (event.keyCode === 13) {
@@ -147,25 +148,25 @@ searchTable = () => {
 	}
 }
 
-const url = new URL(document.location);
-const params = new URLSearchParams(url.search);
+let url = new URL(document.location);
+let params = new URLSearchParams(url.search);
 updateURL = () => {
-	params.set("date", dateField.value);
-
-	let new_url = url.toString() + "?" + params.toString();
+	url.searchParams.set("date", dateField.value);
+	let new_url = url.toString();
 	history.pushState({
 		path: new_url
 	}, '', new_url);
 
-	console.log(params.toString());
 }
 
 updateDateViaURL = () => {
-	if (params.has("date"))
+	if (params.get("date") != null) {
 		dateField.value = params.get("date");
+		generateTable();
+	} else
+		hideTable();
 }
 
 document.addEventListener("DOMContentLoaded", function () {
 	updateDateViaURL();
-	generateTable();
 });
