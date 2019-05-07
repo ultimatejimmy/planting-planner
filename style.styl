@@ -5,6 +5,19 @@ systemFont = -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, A
 #app, input, button
 	font-family 'Neucha', systemFont
 
+button
+	max-width 90%
+	display:inline-block;
+	padding:0.2em .6em;
+	margin 0.3em 0.3em 0 0
+	border-radius:0.15em;
+	box-sizing: border-box;
+	box-shadow:inset 0 -0.5em 0 -0.37em rgba(0,0,0,0.17);
+	text-align:center;
+	position:relative;
+	&:active
+		top:0.1em;
+
 #app
 	width 100%
 	font-size 1.3em
@@ -50,6 +63,13 @@ table
 		min-width 150px
 	th, td
 		padding 0.5em 1em
+
+@media (max-width 600px)
+	.date
+		display none
+	html, body, #app 
+		overflow auto
+	
 
 thead 
 	td
