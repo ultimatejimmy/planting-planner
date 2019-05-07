@@ -26,34 +26,24 @@ function showError(error) {
 }
 
 getStation = (position) => {
-	const url = "http://api.farmsense.net/v1/frostdates/stations/?lat=" + position.coords.latitude + "&lon=" + position.coords.longitude;
+	const url = "https://cors.io/?http://api.farmsense.net/v1/frostdates/stations/?lat=" + position.coords.latitude + "&lon=" + position.coords.longitude;
 	fetch(url)
 		.then(res => res.json())
 		.then(
 			result => {
 				getFrostDate(result[0].id);
 			},
-			error => {
-				this.setState({
-					error
-				});
-			}
 		)
 }
 
 getFrostDate = (stationId) => {
-	const url = "http://api.farmsense.net/v1/frostdates/probabilities/?station=" + stationId + "&season=1";
+	const url = "https://cors.io/?http://api.farmsense.net/v1/frostdates/probabilities/?station=" + stationId + "&season=1";
 	fetch(url)
 		.then(res => res.json())
 		.then(
 			result => {
 				setFrostDate(result[0].prob_30);
 			},
-			error => {
-				this.setState({
-					error
-				});
-			}
 		)
 }
 
