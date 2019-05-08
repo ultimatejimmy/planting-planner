@@ -25,9 +25,23 @@ function showError(error) {
 	}
 }
 
+function handleErrors(response) {
+	if (!response.ok) {
+		console.log("Proxy failed...trying another...");
+		proxy = "https://cors.io/?";
+		getStation(currentPosition);
+	}
+	return response;
+}
+
+let currentPosition;
+let proxy = "https://yacdn.org/proxy/";
+
 getStation = (position) => {
-	const url = "https://cors.io/?http://api.farmsense.net/v1/frostdates/stations/?lat=" + position.coords.latitude + "&lon=" + position.coords.longitude;
+	currentPosition = position;
+	const url = proxy + "http://api.farmsense.net/v1/frostdates/stations/?lat=" + position.coords.latitude + "&lon=" + position.coords.longitude;
 	fetch(url)
+		.catch(handleErrors)
 		.then(res => res.json())
 		.then(
 			result => {
@@ -37,8 +51,9 @@ getStation = (position) => {
 }
 
 getFrostDate = (stationId) => {
-	const url = "https://cors.io/?http://api.farmsense.net/v1/frostdates/probabilities/?station=" + stationId + "&season=1";
+	const url = proxy + "http://api.farmsense.net/v1/frostdates/probabilities/?station=" + stationId + "&season=1";
 	fetch(url)
+		.then(handleErrors)
 		.then(res => res.json())
 		.then(
 			result => {
