@@ -65,8 +65,16 @@ button
 .startIndoors
 	background-color #53b33b !important
 
+.startIndoors:first-of-type, :not(.startIndoors) + .startIndoors
+	&::after
+		content "🏡"
+
 .startOutdoors
 	background-color #26b5c0 !important
+
+.startOutdoors:first-of-type, :not(.startOutdoors) + .startOutdoors
+	&::after
+		content "🌤️"
 
 table 
 	width 100%
