@@ -27,12 +27,14 @@
 			<p id="locationError"></p>
 		</div>
 		<div id="plants" class="hidden">
-			<input id="search" placeholder="🔍  Search for a plant" onkeyup="searchTable()" />
-			<div id="key">
-				🏡 = Start Indoors<br>🌤️ = Start Outdoors/Plant Out
+			<div class="sticky">
+				<input id="search" placeholder="🔍  Search for a plant" onkeyup="searchTable()" />
+				<div id="key">
+					🏡 = Start Indoors<br>🌤️ = Start Outdoors/Plant Out
+				</div>
 			</div>
 			<table id="thePlants" class="pure-table pure-table-striped pure-table-horizontal">
-				<thead>
+				<thead class="sticky">
 					<tr>
 						<td>Plant</td>
 						<td>Schedule</td>
