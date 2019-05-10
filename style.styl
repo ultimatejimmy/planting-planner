@@ -10,6 +10,10 @@ h1
 h1, p
 	text-align center
 
+p
+	margin-left 20px
+	margin-right 20px
+
 .left
 	text-align left
 	margin-left 20px
@@ -92,7 +96,7 @@ table
 @media (max-width 600px)
 	.date
 		display	none
-	html, body, #app 
+	html 
 		overflow-x hidden
 
 thead 
@@ -112,10 +116,18 @@ div.sticky
 	width 100%
 	height 75px
 	background-color white
-	@media (max-width 645px)
-		height 150px
+		
 thead.sticky
 	top 75px
 	position sticky
-	@media (max-width 645px)
+	
+@media (max-width 645px) and (min-height 400px)
+	div.sticky
+		height 150px
+	thead.sticky
 		top 150px
+@media (max-height 450px)
+	div.sticky
+		position static
+	thead.sticky
+		top 0

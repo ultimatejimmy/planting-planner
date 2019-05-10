@@ -38,6 +38,7 @@ let currentPosition;
 let proxy = "https://yacdn.org/proxy/";
 
 getStation = (position) => {
+	locationError.textContent = "Loading based on " + position.coords.latitude + ", " + position.coords.longitude;
 	currentPosition = position;
 	const url = proxy + "http://api.farmsense.net/v1/frostdates/stations/?lat=" + position.coords.latitude + "&lon=" + position.coords.longitude;
 	fetch(url)
@@ -68,4 +69,5 @@ setFrostDate = (date) => {
 	let formattedDate = currentDate.getFullYear() + "-" + date.substring(0, 2) + "-" + date.substring(2);
 	dateField.value = formattedDate;
 	generateTable();
+	locationError.textContent = null;
 }
