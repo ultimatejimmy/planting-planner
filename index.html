@@ -3,22 +3,19 @@
 
 <head>
 	<meta charset="utf-8" />
-	<meta name="viewport"
-		content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
 	<link rel="stylesheet" type="text/css" href="css/normalize.css" />
-	<link rel="stylesheet" type="text/css" href="style.css?v=20190509" />
+	<link rel="stylesheet" type="text/css" href="style.css?v=201905091" />
 </head>
 
 <body>
 	<div id="app">
-		<a class="left" href="/">🡄 Home</a>
+		<a class="left" href="/">&larr; Home</a>
 		<h1>Spring Planting Schedule</h1>
 		<p>Based on your spring last frost date, this app tells you when to start your plants indoors or outdoors.</p>
-		<p>For gardening tool recommendations and more information on where this data came from, <a
-				href="https://jimmypautz.com/planting-planner/">read my blog post about it.</a></p>
+		<p>For gardening tool recommendations and more information on where this data came from, <a href="https://jimmypautz.com/planting-planner/">read my blog post about it.</a></p>
 		<div id="input">
-			<label for="frostDate">Last Frost Date: </label><input id="frostDate" type="date"
-				placeholder="Enter as MM/DD/YYYY" />
+			<label for="frostDate">Last Frost Date: </label><input id="frostDate" type="date" placeholder="Enter as MM/DD/YYYY" />
 			<br>
 			<button id="generateTable" onclick="generateTable();" type="submit">
 				Get Schedule!
@@ -28,7 +25,7 @@
 		</div>
 		<div id="plants" class="hidden">
 			<div class="sticky">
-				<input id="search" placeholder="🔍  Search for a plant" onkeyup="searchTable()" />
+				<input id="search" placeholder="🔍 Search for a plant" onkeyup="searchTable()" />
 				<div id="key">
 					🏡 = Start Indoors<br>🌤️ = Start Outdoors/Plant Out
 				</div>
