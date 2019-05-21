@@ -58,7 +58,7 @@ getFrostDate = (stationId) => {
 		.then(res => res.json())
 		.then(
 			result => {
-				setFrostDate(result[0].prob_30);
+				setFrostDate(result[1].prob_30);
 			},
 		)
 }
