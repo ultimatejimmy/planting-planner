@@ -1,10 +1,10 @@
-const locationError = document.querySelector("#locationError");
+const locationInfo = document.querySelector("#locationInfo");
 
 function getLocation() {
 	if (navigator.geolocation) {
 		navigator.geolocation.getCurrentPosition(getStation, showError);
 	} else {
-		locationError.innerHTML = "Geolocation is not supported by this browser.";
+		locationInfo.innerHTML = "Geolocation is not supported by this browser.";
 	}
 }
 
@@ -38,7 +38,7 @@ let currentPosition;
 let proxy = "https://yacdn.org/proxy/";
 
 getStation = (position) => {
-	locationError.textContent = "Loading based on " + position.coords.latitude + ", " + position.coords.longitude;
+	locationInfo.textContent = "Loading based on " + position.coords.latitude + ", " + position.coords.longitude;
 	currentPosition = position;
 	const url = proxy + "http://api.farmsense.net/v1/frostdates/stations/?lat=" + position.coords.latitude + "&lon=" + position.coords.longitude;
 	fetch(url)
@@ -46,12 +46,14 @@ getStation = (position) => {
 		.then(res => res.json())
 		.then(
 			result => {
+				locationInfo.textContent = "Loaded closest station: " + result[0].name;
 				getFrostDate(result[0].id);
 			},
 		)
 }
 
 getFrostDate = (stationId) => {
+
 	const url = proxy + "http://api.farmsense.net/v1/frostdates/probabilities/?station=" + stationId + "&season=1";
 	fetch(url)
 		.then(handleErrors)
@@ -69,5 +71,4 @@ setFrostDate = (date) => {
 	let formattedDate = currentDate.getFullYear() + "-" + date.substring(0, 2) + "-" + date.substring(2);
 	dateField.value = formattedDate;
 	generateTable();
-	locationError.textContent = null;
 }
