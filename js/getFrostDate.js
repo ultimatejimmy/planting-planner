@@ -28,14 +28,27 @@ function showError(error) {
 function handleErrors(response) {
 	if (!response.ok) {
 		console.log("Proxy failed...trying another...");
-		proxy = "https://cors.io/?";
+		switch (proxy) {
+			case "https://cors-anywhere.herokuapp.com/":
+				proxy = "https://cors-proxy.htmldriven.com/?url="
+				break;
+			case "https://cors-proxy.htmldriven.com/?url=":
+				proxy = "https://thingproxy.freeboard.io/fetch/"
+				break;
+			case "https://thingproxy.freeboard.io/fetch/":
+				proxy = "http://www.whateverorigin.org/get?url="
+				break;
+			case "http://www.whateverorigin.org/get?url=":
+				proxy = "http://gobetween.oklabs.org/"
+				break;
+		}
 		getStation(currentPosition);
 	}
 	return response;
 }
 
 let currentPosition;
-let proxy = "https://yacdn.org/proxy/";
+let proxy = "https://cors-anywhere.herokuapp.com/";
 
 getStation = (position) => {
 	locationInfo.textContent = "Loading based on " + position.coords.latitude + ", " + position.coords.longitude;
