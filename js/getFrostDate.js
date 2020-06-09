@@ -28,32 +28,20 @@ function showError(error) {
 function handleErrors(response) {
 	if (!response.ok) {
 		console.log("Proxy failed...trying another...");
-		switch (proxy) {
-			case "https://cors-anywhere.herokuapp.com/":
-				proxy = "https://cors-proxy.htmldriven.com/?url="
-				break;
-			case "https://cors-proxy.htmldriven.com/?url=":
-				proxy = "https://thingproxy.freeboard.io/fetch/"
-				break;
-			case "https://thingproxy.freeboard.io/fetch/":
-				proxy = "http://www.whateverorigin.org/get?url="
-				break;
-			case "http://www.whateverorigin.org/get?url=":
-				proxy = "http://gobetween.oklabs.org/"
-				break;
-		}
+		proxy = "https://cors-anywhere.herokuapp.com/"
 		getStation(currentPosition);
 	}
 	return response;
 }
 
 let currentPosition;
-let proxy = "https://cors-anywhere.herokuapp.com/";
+let proxy = "https://polished-night-b971.ultimatejimmy.workers.dev/?";
 
 getStation = (position) => {
 	locationInfo.textContent = "Loading based on " + position.coords.latitude + ", " + position.coords.longitude;
 	currentPosition = position;
 	const url = proxy + "http://api.farmsense.net/v1/frostdates/stations/?lat=" + position.coords.latitude + "&lon=" + position.coords.longitude;
+	// console.log(url);
 	fetch(url)
 		.catch(handleErrors)
 		.then(res => res.json())
