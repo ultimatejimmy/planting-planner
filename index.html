@@ -9,7 +9,7 @@
 		content="Based on your spring last frost date, this app tells you when to start your plants indoors or outdoors.">
 	<meta name="author" content="Jimmy Pautz">
 	<link rel="stylesheet" type="text/css" href="css/normalize.css" />
-	<link rel="stylesheet" type="text/css" href="style.css?v=20200518" />
+	<link rel="stylesheet" type="text/css" href="style.css?v=202205" />
 	<title>Spring Planting Schedule Tool</title>
 </head>
 
@@ -21,14 +21,15 @@
 		<p>For gardening tool recommendations and more information on where this data came from, <a
 				href="https://jimmypautz.com/planting-planner/">read my blog post about it.</a></p>
 		<div id="input">
+			<button id="getLocation" onclick="getLocation();">🗺️ Find based on location</button>
+			<p id="locationInfo"></p>
+			<p id="or">or</p>
 			<label for="frostDate">Last Frost Date: </label><input id="frostDate" type="date"
 				placeholder="Enter as MM/DD/YYYY" />
-			<br>
 			<button id="generateTable" onclick="generateTable();" type="submit">
 				Get Schedule!
 			</button>
-			<button id="getLocation" onclick="getLocation();">🗺️ Find based on location</button>
-			<p id="locationInfo"></p>
+			
 		</div>
 		<div id="plants" class="hidden">
 			<div class="sticky">
@@ -36,10 +37,26 @@
 				<div id="key">
 					🏡 = Start Indoors<br>🌤️ = Start Outdoors/Plant Out
 				</div>
+				<div>
+					<button id="editList" onclick="editList();" type="submit">
+						✏️ Edit List
+					</button>
+				</div>
+				<div>
+					<button id="saveList" class="hide" onclick="saveList();" type="submit">
+						💾 Save List
+					</button>
+				</div>
+				<!-- <div>
+					<button id="copyURL" onclick="copyURLToClipboard();" type="submit">
+						Copy URL to Save
+					</button>
+				</div> -->
 			</div>
 			<table id="thePlants" class="pure-table pure-table-striped pure-table-horizontal">
 				<thead class="sticky">
 					<tr>
+						<td class="filterCB hide">Edit</td>
 						<td>Plant</td>
 						<td>Schedule</td>
 					</tr>

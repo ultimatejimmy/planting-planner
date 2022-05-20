@@ -2,9 +2,13 @@ const dateField = document.getElementById("frostDate");
 const lastFrostDate = new Date(dateField);
 showTable = () => document.querySelector("#plants").classList.remove("hidden");
 hideTable = () => document.querySelector("#plants").classList.add("hidden");
+const plantSet = new Set()
+let table = document.getElementById("thePlants")
+let tbody = table.querySelector("tbody")
+let tr = tbody.getElementsByTagName("tr")
 
 document.addEventListener("keyup", function (event) {
-	if (event.keyCode === 13) {
+	if (event.key === "Enter") {
 		event.preventDefault();
 		document.querySelector("button").click();
 	}
@@ -35,6 +39,12 @@ generateBody = () => {
 	document.querySelector("table").replaceChild(tbody, old_tbody);
 	for (let plant of plants) {
 		let row = tbody.insertRow();
+		row.id = plant.name;
+		let checkbox = row.insertCell();
+		checkbox.classList.add("filterCB", "hide");
+		let cb = document.createElement("input");
+		cb.setAttribute("type", "checkbox");
+		checkbox.appendChild(cb);
 		let plantName = row.insertCell();
 		plantName.classList.add("plant");
 		plantName.appendChild(document.createTextNode(plant.name));
@@ -89,7 +99,10 @@ generateTable = () => {
 	generateBody();
 	const input = document.querySelector("#frostDate");
 	input.addEventListener("change", generateTable);
-	updateURL();
+	updateURL("date", dateField.value);
+	table = document.getElementById("thePlants")
+	tbody = table.querySelector("tbody")
+	tr = tbody.getElementsByTagName("tr")
 };
 
 getPlantingDates = (earliest, latest, theLabel) => {
@@ -127,31 +140,31 @@ datesOverlap = (start1, end1, start2, end2) => {
 };
 
 searchTable = () => {
-	var input, filter, table, tbody, tr, td, i, txtValue;
+	var input, filter, i, id;
 	input = document.getElementById("search");
 	filter = input.value.toUpperCase();
-	table = document.getElementById("thePlants");
-	tbody = table.querySelector("tbody");
-	tr = tbody.getElementsByTagName("tr");
+	
 
 	// Loop through all table rows, and hide those who don't match the search query
 	for (i = 0; i < tr.length; i++) {
-		td = tr[i].getElementsByTagName("td")[0];
-		if (td) {
-			txtValue = td.textContent || td.innerText;
-			if (txtValue.toUpperCase().indexOf(filter) > -1) {
-				tr[i].style.display = "";
-			} else {
-				tr[i].style.display = "none";
-			}
+		id = tr[i].id;
+		if (id.toUpperCase().indexOf(filter) > -1) {
+			tr[i].style.display = "";
+		} else {
+			tr[i].style.display = "none";
 		}
 	}
 }
 
 let url = new URL(document.location);
 let params = new URLSearchParams(url.search);
-updateURL = () => {
-	url.searchParams.set("date", dateField.value);
+updateURL = (type, value) => {
+	if(type == "date") {
+		url.searchParams.set(type, value);
+	}
+	if(type == "custom") {
+		url.searchParams.set("p", value)
+	}
 	let new_url = url.toString();
 	history.pushState({
 		path: new_url
@@ -166,7 +179,88 @@ updateDateViaURL = () => {
 	} else
 		hideTable();
 }
+updatePlantsViaURL = () => {
+	if (params.get("p") != null) {
+		generateTable()
+		checkBoxesFromURL(params.get("p"))
+		filterByCB()
+	} 
+}
+
+toggleCB = () => {
+	const cbs = [...document.getElementsByClassName("filterCB")]
+	cbs.forEach(cell => {
+		cell.classList.toggle('hide')
+	})	
+}
+
+showAllRows = () => {
+	for (i = 0; i < tr.length; i++) {
+		tr[i].style.display = ""
+	}
+}
+
+toggleListButtons = () =>{
+	document.querySelector("#editList").classList.toggle("hide")
+	document.querySelector("#saveList").classList.toggle("hide")
+}
+
+editList = () => {
+	toggleCB()
+	showAllRows()
+	toggleListButtons()
+}
+checkBoxesFromURL = (plantParams) => {
+	var i, cb, currentPlant
+	
+	urlPlants = new Set(String(plantParams).split("|"))
+	console.log(urlPlants)
+	toggleCB()
+	for (i = 0; i < tr.length; i++) {
+		cb = tr[i].getElementsByTagName("input")[0]
+		currentPlant = tr[i].id
+		// console.log(currentPlant)
+		if(urlPlants.has(currentPlant)) {
+			console.log("true")
+			cb.click()
+		}
+	}
+}
+
+saveList = () => {
+	toggleListButtons()
+	filterByCB()
+}
+
+filterByCB = () => {
+	var i, cb
+	
+	plantSet.clear()
+
+	if(document.querySelectorAll('input[type="checkbox"]:checked').length == 0) {
+		showAllRows()
+	} else {
+		for (i = 0; i < tr.length; i++) {
+			cb = tr[i].getElementsByTagName("input")[0]
+	
+			if (cb.checked) {
+					tr[i].style.display = ""
+					plantSet.add(tr[i].id)
+				} else {
+					tr[i].style.display = "none"
+				}
+		}
+	}
+	
+	updateURL("custom", [...plantSet].join('|'))
+	toggleCB()
+}
+
+copyURLToClipboard = () => {
+	navigator.clipboard.writeText(window.location.href);
+  }
 
 document.addEventListener("DOMContentLoaded", function () {
-	updateDateViaURL();
+	updateDateViaURL()
+	updatePlantsViaURL()
 });
