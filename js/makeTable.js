@@ -7,11 +7,19 @@ let table = document.getElementById("thePlants")
 let tbody = table.querySelector("tbody")
 let tr = tbody.getElementsByTagName("tr")
 
-document.addEventListener("keyup", function (event) {
-	if (event.key === "Enter") {
-		event.preventDefault();
-		document.querySelector("button").click();
-	}
+document.addEventListener('keydown', function(event) {
+  // 1. Check if the user pressed Enter and is inside an input
+  if (event.key === 'Enter' && event.target.tagName === 'INPUT') {
+    
+    // 2. Find the button immediately following this input
+    const nextButton = event.target.nextElementSibling;
+
+    // 3. If it's a button, click it!
+    if (nextButton && nextButton.tagName === 'BUTTON') {
+      event.preventDefault(); // Stop the form from submitting/reloading
+      nextButton.click();
+    }
+  }
 });
 
 generateHeader = () => {

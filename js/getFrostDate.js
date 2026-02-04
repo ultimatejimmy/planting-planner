@@ -1,8 +1,9 @@
 const locationInfo = document.querySelector("#locationInfo");
+const zipCodeField = document.querySelector("#zipcode");
 
 function getLocation() {
 	if (navigator.geolocation) {
-		navigator.geolocation.getCurrentPosition(getStation, showError);
+		navigator.geolocation.getCurrentPosition(getZip, showError);
 	} else {
 		locationInfo.innerHTML = "Geolocation is not supported by this browser.";
 	}
@@ -28,40 +29,100 @@ function showError(error) {
 function handleErrors(response) {
 	if (!response.ok) {
 		console.log("Proxy failed...trying another...");
-		proxy = "https://cors-anywhere.herokuapp.com/"
-		getStation(currentPosition);
+		proxy = "https://corsproxy.io/?url="
+		getZip(currentPosition);
 	}
 	return response;
 }
 
 let currentPosition;
 let proxy = "https://polished-night-b971.ultimatejimmy.workers.dev/?";
+let api_key_proxy = "https://curly-sea-90e9.ultimatejimmy.workers.dev/";
 
-getStation = (position) => {
-	locationInfo.textContent = "Loading based on " + position.coords.latitude + ", " + position.coords.longitude;
+getZip = (position) => {
 	currentPosition = position;
-	const url = proxy + "http://api.farmsense.net/v1/frostdates/stations/?lat=" + position.coords.latitude + "&lon=" + position.coords.longitude;
+	locationInfo.textContent = "Loading based on " + position.coords.latitude + ", " + position.coords.longitude;
+	const url = api_key_proxy + "?lat=" + position.coords.latitude + "&lon=" + position.coords.longitude;
 	// console.log(url);
 	fetch(url)
 		.catch(handleErrors)
-		.then(res => res.json())
-		.then(
-			result => {
-				locationInfo.textContent = "Loaded closest station: " + result[0].name;
-				getFrostDate(result[0].id);
-			},
-		)
+		.then(res => {
+			// Optional: Check for HTTP errors (like 404 or 500)
+			// fetch() only rejects on network failure, not server errors.
+			if (!res.ok) {
+				throw new Error(`HTTP error! status: ${res.status}`);
+			}
+			return res.json();
+		})
+		.then(result => {
+			// Check if result is an array or object to avoid crashes
+			const data = Array.isArray(result) ? result[0] : result;
+			
+			if (data && data.address) {
+				// console.log(data.address.postcode);
+				getStation(data.address.postcode);
+				getFrostDate(data.address.postcode);
+				zipCodeField.value = data.address.postcode;
+			} else {
+				console.error("Address data not found in response");
+			}
+		})
+		
 }
 
-getFrostDate = (stationId) => {
+getByZip = () => {
+	const zipCode = document.querySelector("#zipcode").value;
+	getStation(zipCode);
+	getFrostDate(zipCode);
+}
 
-	const url = proxy + "http://api.farmsense.net/v1/frostdates/probabilities/?station=" + stationId + "&season=1";
+getStation = (zipCode) => {
+	const url = proxy + "https://apis.joelgrant.dev/api/v1/frost/" + zipCode;
+	// console.log(url);
 	fetch(url)
-		.then(handleErrors)
-		.then(res => res.json())
+		.catch(handleErrors)
+		.then(res => {
+			// Optional: Check for HTTP errors (like 404 or 500)
+			// fetch() only rejects on network failure, not server errors.
+			if (!res.ok) {
+				throw new Error(`HTTP error! status: ${res.status}`);
+			}
+			return res.json();
+		})
 		.then(
 			result => {
-				setFrostDate(result[1].prob_30);
+				const data = Array.isArray(result) ? result[0] : result;
+				if (data && data.data.weather_station) {
+					locationInfo.textContent = "Loaded closest station: " + data.data.weather_station.name;
+				} else {
+					console.error("Address data not found in response");
+				}
+			},
+		)
+		
+}
+
+getFrostDate = (zipCode) => {
+
+	const url = proxy + "https://apis.joelgrant.dev/api/v1/frost/" + zipCode;
+	fetch(url)
+		.catch(handleErrors)
+		.then(res => {
+			// Optional: Check for HTTP errors (like 404 or 500)
+			// fetch() only rejects on network failure, not server errors.
+			if (!res.ok) {
+				throw new Error(`HTTP error! status: ${res.status}`);
+			}
+			return res.json();
+		})
+		.then(
+			result => {
+				const data = Array.isArray(result) ? result[0] : result;
+				if (data && data.data.weather_station) {
+					setFrostDate(data.data.frost_dates.last_frost_32f['30%']);
+				} else {
+					console.error("Address data not found in response");
+				}
 			},
 		)
 }
@@ -69,7 +130,25 @@ getFrostDate = (stationId) => {
 
 setFrostDate = (date) => {
 	const currentDate = new Date();
-	let formattedDate = currentDate.getFullYear() + "-" + date.substring(0, 2) + "-" + date.substring(2);
+	let formattedDate = currentDate.getFullYear() + "-" + date.substring(0, 2) + "-" + date.substring(3);
 	dateField.value = formattedDate;
 	generateTable();
+}
+
+function copyCurrentUrl() {
+  const urlToCopy = window.location.href;
+
+  navigator.clipboard.writeText(urlToCopy).then(() => {
+    // Optional: Provide visual feedback to the user
+    const feedbackEl = document.getElementById('copy-feedback');
+    if (feedbackEl) {
+      feedbackEl.style.display = 'inline';
+      setTimeout(() => {
+        feedbackEl.style.display = 'none';
+      }, 2000); // Hide the message after 2 seconds
+    }
+  }).catch(err => {
+    console.error('Could not copy URL: ', err);
+    alert('Failed to copy URL to clipboard.');
+  });
 }

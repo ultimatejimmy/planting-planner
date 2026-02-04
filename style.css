@@ -18,7 +18,7 @@ p {
 p#locationInfo {
   text-align: left;
 }
-p#or {
+p.or {
   font-size: 36px;
   margin: 5px 0;
 }
@@ -51,10 +51,14 @@ button:active {
   top: 0.1em;
 }
 #editList,
-#saveList {
+#saveList,
+#copyURL {
   font-size: 22px;
-  width: 140px;
+  width: 150px;
   text-align: left;
+}
+#copyURL {
+  width: auto;
 }
 #app {
   width: 100%;
@@ -83,8 +87,10 @@ button:active {
   margin: auto auto 15px;
 }
 #input label,
-#input #frostDate {
+#input #frostDate,
+#input #zipcode {
   font-size: 35px;
+  width: 210px;
 }
 #input button {
   font-size: 36px;
@@ -124,6 +130,21 @@ table td.filterCB.hide {
 .hide {
   display: none;
 }
+@media (max-width: 685px) {
+  #input {
+    width: 100%;
+  }
+  #input label,
+  #input #frostDate,
+  #input #zipcode {
+    font-size: 28px;
+  }
+  #input button {
+    font-size: 28px;
+    display: block;
+    margin: 0.3em auto;
+  }
+}
 @media (max-width: 600px) {
   .date {
     display: none;
@@ -144,6 +165,7 @@ thead td.date {
 }
 div.sticky {
   top: 0;
+  position: -webkit-sticky;
   position: sticky;
   width: 100%;
   height: 75px;
@@ -154,9 +176,18 @@ div.sticky div {
 }
 thead.sticky {
   top: 75px;
+  position: -webkit-sticky;
   position: sticky;
 }
-@media (max-width: 645px) and (min-height: 400px) {
+@media (max-width: 920px) and (min-height: 400px) {
+  div.sticky {
+    height: 100px;
+  }
+  thead.sticky {
+    top: 100px;
+  }
+}
+@media (max-width: 765px) and (min-height: 400px) {
   div.sticky {
     height: 150px;
   }

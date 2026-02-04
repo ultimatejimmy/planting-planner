@@ -23,7 +23,13 @@
 		<div id="input">
 			<button id="getLocation" onclick="getLocation();">🗺️ Find based on location</button>
 			<p id="locationInfo"></p>
-			<p id="or">or</p>
+			<p class="or">or</p>
+			<label for="zipcode">US Zip Code: </label><input id="zipcode" type="text"
+				placeholder="5-digit zip code" />
+			<button id="getDate" onclick="getByZip();" type="submit">
+				Get Schedule!
+			</button>
+			<p class="or">or</p>
 			<label for="frostDate">Last Frost Date: </label><input id="frostDate" type="date"
 				placeholder="Enter as MM/DD/YYYY" />
 			<button id="generateTable" onclick="generateTable();" type="submit">
@@ -47,11 +53,11 @@
 						💾 Save List
 					</button>
 				</div>
-				<!-- <div>
-					<button id="copyURL" onclick="copyURLToClipboard();" type="submit">
-						Copy URL to Save
-					</button>
-				</div> -->
+				<div>
+					<button id="copyURL" onclick="copyCurrentUrl()">🔗 Copy Link</button>
+<span id="copy-feedback" style="display:none; color: green; margin-left: 10px;">URL Copied!</span>
+
+				</div>
 			</div>
 			<table id="thePlants" class="pure-table pure-table-striped pure-table-horizontal">
 				<thead class="sticky">
@@ -67,7 +73,7 @@
 	</div>
 </body>
 <script src="js/data.js"></script>
-<script src="js/getFrostDate.js?v=202006091"></script>
+<script src="js/getFrostDate.js?v=20260204_1320"></script>
 <script src="js/makeTable.js?v=20190510"></script>
 
 </html>
